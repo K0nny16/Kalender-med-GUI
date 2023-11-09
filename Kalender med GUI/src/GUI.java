@@ -3,9 +3,12 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import java.util.Calendar;
 
 public class GUI implements ActionListener {
 
@@ -16,6 +19,7 @@ public class GUI implements ActionListener {
     JButton[] buttons;
     JTextField[] textFields;
     JLabel[] text;
+    JLabel[] title;
 
     GUI(){
         frame = new JFrame();
@@ -26,11 +30,11 @@ public class GUI implements ActionListener {
         panels = new JPanel[7];
         bottom = new JPanel[7];
         top = new JPanel[7];
+        title = new JLabel[7];
 
         buttons = new JButton[7];
         textFields = new JTextField[7];
         text = new JLabel[7];
-
 
 
         panels();
@@ -39,10 +43,9 @@ public class GUI implements ActionListener {
         labels();
         dateChecker();
 
-
         frame.setVisible(true);
     }
-
+////////////////////////////////////////////////////////////////////////////////////
     void panels(){
         Border gray = BorderFactory.createLineBorder(Color.GRAY);
         for(int i = 0; i < 7; i++){
@@ -54,24 +57,22 @@ public class GUI implements ActionListener {
     }
 
     void labels(){
-
-        LocalDate nu = LocalDate.now();
-        LocalDate nu2 = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE");
-        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("dd/MM");
-        String formattedDate = nu.format(formatter);
-        String formattedDate2= nu2.format(formatter2);
-        JLabel månadDag = new JLabel(formattedDate2);
-        JLabel day = new JLabel(formattedDate);
+        LocalDate now = LocalDate.now();
+        LocalDate måndag = now.minusDays(now.getDayOfWeek().getValue()-1);
+        String[] vecka = new String[7];
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("EEEE dd/MM");
 
         for(int i = 0; i < 7; i++){
             top[i] = new JPanel();
             text[i] = new JLabel();
             top[i].setLayout(new FlowLayout());
 
+            LocalDate dag = måndag.plusDays(i);
+            vecka[i]=dag.format(format);
 
-            top[i].add(day);
-            top[i].add(månadDag);
+            title[i] = new JLabel(vecka[i]);
+            top[i].add(title[i]);
+
             top[i].add(text[i]);
             panels[i].add(top[i],BorderLayout.NORTH);
         }
