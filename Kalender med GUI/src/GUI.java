@@ -20,6 +20,9 @@ public class GUI implements ActionListener {
     JTextField[] textFields;
     JLabel[] text;
     JLabel[] title;
+    JPanel[] center;
+
+    JLabel[] events;
 
     GUI(){
         frame = new JFrame();
@@ -31,6 +34,8 @@ public class GUI implements ActionListener {
         bottom = new JPanel[7];
         top = new JPanel[7];
         title = new JLabel[7];
+        center = new JPanel[7];
+        events = new JLabel[7];
 
         buttons = new JButton[7];
         textFields = new JTextField[7];
@@ -39,7 +44,6 @@ public class GUI implements ActionListener {
 
         panels();
         buttons();
-        textFrame();
         labels();
         dateChecker();
 
@@ -58,7 +62,7 @@ public class GUI implements ActionListener {
 
     void labels(){
         LocalDate now = LocalDate.now();
-        LocalDate måndag = now.minusDays(now.getDayOfWeek().getValue()-1);
+        LocalDate monday = now.minusDays(now.getDayOfWeek().getValue()-1);
         String[] vecka = new String[7];
         DateTimeFormatter format = DateTimeFormatter.ofPattern("EEEE dd/MM");
 
@@ -67,7 +71,7 @@ public class GUI implements ActionListener {
             text[i] = new JLabel();
             top[i].setLayout(new FlowLayout());
 
-            LocalDate dag = måndag.plusDays(i);
+            LocalDate dag = monday.plusDays(i);
             vecka[i]=dag.format(format);
 
             title[i] = new JLabel(vecka[i]);
@@ -75,6 +79,11 @@ public class GUI implements ActionListener {
 
             top[i].add(text[i]);
             panels[i].add(top[i],BorderLayout.NORTH);
+
+            center[i] = new JPanel();
+            events[i] = new JLabel();
+            center[i].add(events[i],new BoxLayout(events[i],BoxLayout.Y_AXIS));
+            panels[i].add(center[i],BorderLayout.CENTER);
         }
     }
 
@@ -90,27 +99,32 @@ public class GUI implements ActionListener {
 
             panels[i].add(bottom[i],BorderLayout.SOUTH);
             bottom[i].add(buttons[i],BorderLayout.SOUTH);
-        }
-    }
 
-    void textFrame(){
-        for(int i = 0; i < 7; i++)
-        {
             textFields[i] = new JTextField();
             bottom[i].add(textFields[i],BorderLayout.NORTH);
         }
     }
-
     void dateChecker(){
         LocalDate idag = LocalDate.now();
         int idagSiffra = idag.getDayOfWeek().getValue();
         panels[idagSiffra-1].setBackground(Color.decode("#05eba9"));
         bottom[idagSiffra-1].setBackground(Color.decode("#05eba9"));
         top[idagSiffra-1].setBackground(Color.decode("#05eba9"));
+        center[idagSiffra-1].setBackground(Color.decode("#05eba9"));
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //När rätt knapp trycks (1-7) så skriver man text från JTextfieldet i rätt JLabel.
+        JButton sourceButton = (JButton) e.getSource();
+
+        for (int i = 0; i < 7; i++) {
+            if (sourceButton == buttons[i]) {
+                String text = events[i].getText()+"\n"+textFields[i].getText();
+                events[i].setText(text);
+                panels[i].revalidate();
+                panels[i].repaint();
+            }
+            //Testa att ta brot Arrayn för JLabels och adda den i AP metoden.
+        }
     }
 }
