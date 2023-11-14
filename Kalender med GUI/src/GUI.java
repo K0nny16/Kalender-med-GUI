@@ -3,12 +3,9 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import java.util.Calendar;
 
 public class GUI implements ActionListener {
 
@@ -124,7 +121,7 @@ public class GUI implements ActionListener {
                 panels[i].revalidate();
                 panels[i].repaint();
             }
-            //Testa att ta brot Arrayn för JLabels och adda den i AP metoden.
+            //Testa att ta bort Array för JLabels och adda den i AP metoden.
         }
     }
 }
