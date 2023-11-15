@@ -109,9 +109,9 @@ public class GUI implements ActionListener {
             if (sourceButton == buttons[i]) {
                 JLabel events = new JLabel("<html>"+textFields[i].getText()+"</html>");   //Sätter texten på JLabeln till det som finns i textFieldet.
                 events.setHorizontalAlignment(JLabel.CENTER);
-                events.setVerticalAlignment(JLabel.CENTER);
+                events.setVerticalAlignment(JLabel.CENTER);                                 //Centrerar texten.
                 center[i].add(events);
-                panels[i].revalidate();                                         //Använder också revalidate och repaint för att updatera panelen.
+                panels[i].revalidate();                                                      //Använder också revalidate och repaint för att updatera panelen.
                 panels[i].repaint();
             }
         }
