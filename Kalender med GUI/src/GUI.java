@@ -15,11 +15,9 @@ public class GUI implements ActionListener {
     JPanel[] top;
     JButton[] buttons;
     JTextField[] textFields;
-    JLabel[] text;
     JLabel[] title;
     JPanel[] center;
 
-    JLabel[] events;
 
     GUI(){
         frame = new JFrame();
@@ -32,22 +30,20 @@ public class GUI implements ActionListener {
         top = new JPanel[7];
         title = new JLabel[7];
         center = new JPanel[7];
-        events = new JLabel[7];
 
         buttons = new JButton[7];
         textFields = new JTextField[7];
-        text = new JLabel[7];
 
 
-        panels();
-        buttons();
-        labels();
+        createPanels();
+        createBottom();
+        createTopCenter();
         dateChecker();
 
         frame.setVisible(true);
     }
 ////////////////////////////////////////////////////////////////////////////////////
-    void panels(){
+    void createPanels(){
         Border gray = BorderFactory.createLineBorder(Color.GRAY);
         for(int i = 0; i < 7; i++){
             panels[i]= new JPanel();
@@ -57,53 +53,49 @@ public class GUI implements ActionListener {
         frame.setLayout(new GridLayout(0,7,1,0));
     }
 
-    void labels(){
+    void createTopCenter(){
         LocalDate now = LocalDate.now();
-        LocalDate monday = now.minusDays(now.getDayOfWeek().getValue()-1);
+        LocalDate monday = now.minusDays(now.getDayOfWeek().getValue()-1);         //Tar reda på måndagens datum.
         String[] vecka = new String[7];
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("EEEE dd/MM");
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("EEEE dd/MM");      //Formaterar det som veckodag dag/månad.
 
         for(int i = 0; i < 7; i++){
             top[i] = new JPanel();
-            text[i] = new JLabel();
             top[i].setLayout(new FlowLayout());
 
-            LocalDate dag = monday.plusDays(i);
+            LocalDate dag = monday.plusDays(i);                                 //Tar måndagens datum och plussar på en dag genom forloopen.
             vecka[i]=dag.format(format);
 
-            title[i] = new JLabel(vecka[i]);
+            title[i] = new JLabel(vecka[i].substring(0,1).toUpperCase()+vecka[i].substring(1)); //Gör första bokstaven till en stor bokstav.
             top[i].add(title[i]);
 
-            top[i].add(text[i]);
             panels[i].add(top[i],BorderLayout.NORTH);
 
             center[i] = new JPanel();
-            events[i] = new JLabel();
-            center[i].add(events[i],new BoxLayout(events[i],BoxLayout.Y_AXIS));
             panels[i].add(center[i],BorderLayout.CENTER);
         }
     }
 
-    void buttons(){
+    void createBottom(){
         for(int i = 0; i < 7; i++){
-            bottom[i] = new JPanel();
+            bottom[i] = new JPanel();                   // Skapar en ny panel "bottom" som jag sätter i botten av den befintiliga panelen.
             panels[i].setLayout(new BorderLayout());
             bottom[i].setLayout(new BorderLayout());
 
-            buttons[i]= new JButton("Skapa");
+            buttons[i]= new JButton("Skapa");           //Lägger till en knapp med actionlistener och tar även bort focusen för att undvika rutan det blir runt texten.
             buttons[i].addActionListener(this);
             buttons[i].setFocusable(false);
 
             panels[i].add(bottom[i],BorderLayout.SOUTH);
             bottom[i].add(buttons[i],BorderLayout.SOUTH);
 
-            textFields[i] = new JTextField();
+            textFields[i] = new JTextField();               //Lägger till ett textfield i den norra delan av "bottom" panelen.
             bottom[i].add(textFields[i],BorderLayout.NORTH);
         }
     }
     void dateChecker(){
         LocalDate idag = LocalDate.now();
-        int idagSiffra = idag.getDayOfWeek().getValue();
+        int idagSiffra = idag.getDayOfWeek().getValue();                //Gör en metod som tar dagens veckodag som en int och jämför det värdet mot dom olika arrayerna jag har och färgar dom grönt ifall det är rätt veckodag.
         panels[idagSiffra-1].setBackground(Color.decode("#05eba9"));
         bottom[idagSiffra-1].setBackground(Color.decode("#05eba9"));
         top[idagSiffra-1].setBackground(Color.decode("#05eba9"));
@@ -112,16 +104,16 @@ public class GUI implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JButton sourceButton = (JButton) e.getSource();
+        JButton sourceButton = (JButton) e.getSource();                         //Kollar vilken knapp som har blivit tryckt och gör en ny knapp med dens värden.
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {                                           //Gör en forloop som kollar "källan" med alla knappar i arrayn tills den hittar rätt.
             if (sourceButton == buttons[i]) {
-                String text = events[i].getText()+"\n"+textFields[i].getText();
-                events[i].setText(text);
-                panels[i].revalidate();
+                JLabel events = new JLabel();
+                events.setText("\n"+textFields[i].getText());                   //Sätter texten på JLabeln till det som finns i textFieldet.
+                center[i].add(events,new BoxLayout(events,BoxLayout.Y_AXIS));
+                panels[i].revalidate();                                         //Använder också revalidate och repaint för att updatera panelen.
                 panels[i].repaint();
             }
-            //Testa att ta bort Array för JLabels och adda den i AP metoden.
         }
     }
 }
