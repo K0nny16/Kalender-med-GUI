@@ -5,8 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-
-
 public class GUI implements ActionListener {
 
     JFrame frame;
@@ -72,6 +70,7 @@ public class GUI implements ActionListener {
             panels[i].add(top[i],BorderLayout.NORTH);
 
             center[i] = new JPanel();
+            center[i].setLayout(new BoxLayout(center[i],BoxLayout.Y_AXIS));
             panels[i].add(center[i],BorderLayout.CENTER);
         }
     }
@@ -108,9 +107,10 @@ public class GUI implements ActionListener {
 
         for (int i = 0; i < 7; i++) {                                           //Gör en forloop som kollar "källan" med alla knappar i arrayn tills den hittar rätt.
             if (sourceButton == buttons[i]) {
-                JLabel events = new JLabel();
-                events.setText("\n"+textFields[i].getText());                   //Sätter texten på JLabeln till det som finns i textFieldet.
-                center[i].add(events,new BoxLayout(events,BoxLayout.Y_AXIS));
+                JLabel events = new JLabel("<html>"+textFields[i].getText()+"</html>");   //Sätter texten på JLabeln till det som finns i textFieldet.
+                events.setHorizontalAlignment(JLabel.CENTER);
+                events.setVerticalAlignment(JLabel.CENTER);
+                center[i].add(events);
                 panels[i].revalidate();                                         //Använder också revalidate och repaint för att updatera panelen.
                 panels[i].repaint();
             }
